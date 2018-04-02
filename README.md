@@ -21,8 +21,6 @@ Since the demonstration time is only an hour, I won't be able to cover how to cr
 
 ### Walkthrough
 
-#setting-up-ec2
-
 #### Setting Up RDS
 
 Open the AWS Console via the following link: [https://console.aws.amazon.com/console/home?region=us-east-1#](https://console.aws.amazon.com/console/home?region=us-east-1#). This console is the basic interface for AWS. Notice that there is a place to change where on Earth the services are hosted from in the top right corner as a drop-down menu. I've selected North Virgina (corresponding to us-east-1) since it is an option built into Netbeans cloud services.
