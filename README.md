@@ -91,7 +91,11 @@ Now that we have all the ground-work laid, we need to install phpMyAdmin on our 
 
 - Now select "Open" to launch the connection. You should be logged into your EC2 instance.
 
+<<<insert image>>>
+
 Taken from [andrewpuch/phpmyadmin_connect_to_rds](https://github.com/andrewpuch/phpmyadmin_connect_to_rds/blob/master/README.md), the instructions for installing phpMyAdmin on the EC2 server (once SSH'd inside) are reproduced below. Run all the commands listed, and edit the files as described.
+
+You can copy the following commands as a block and run them in the terminal.
 
 ```
 sudo su
@@ -99,17 +103,38 @@ apt-get update
 apt-get upgrade -y
 apt-get dist-upgrade -y
 apt-get autoremove -y
-apt-get install apache2 php7.0 php7.0-cli php7.0-fpm php7.0-gd php-ssh2 libapache2-mod-php7.0 php7.0-mcrypt mysql-server php7.0-mysql git unzip zip postfix php7.0-curl mailutils php7.0-json phpmyadmin -y
-php5enmod mcrypt
+```
+Now we must setup the phpMyAdmin service. Once the following command is run, you will be prompted with an interface that will walk you through setting up phpMyAdmin.
 
-nano /etc/apache2/sites-enabled/000-default.conf
---ADD LINE-- 
+```
+apt-get install apache2 php7.0 php7.0-cli php7.0-fpm php7.0-gd php-ssh2 libapache2-mod-php7.0 php7.0-mcrypt mysql-server php7.0-mysql git unzip zip postfix php7.0-curl mailutils php7.0-json phpmyadmin -y
+```
+During setup, ensure the following.
+
+- Choose a password for the MySQL root user.
+- Select "apache2" for the default configuration server.
+- Click "yes" when prompted for DB configuration.
+- Choose a password for the phpMyAdmin root user on the resulting page. This username is automatically set to "phpmyadmin".
+
+Now that phpMyAdmin is setup, you *should* be able to log into it using the IPv4 Public IP address found under the public DNS address we used before. If you copy that IP address into a browser followed by "/phpMyAdmin" you will be taken to the phpMyAdmin interface.
+
+If this link doesn't work, you should check your Security Groups under the EC2 console. Select the launch-wizard-1 security group (that's what mine was named, at least) with the proper description and click "Edit". You should add a rule, as shown below, that works for All TCP and allows connections from Anywhere.
+
+<<<insert image>>>
+  
+You should now be able to access the phpMyAdmin interface and login with the phpMyAdmin password you created before. The RDS instance won't be connected, however, so continue with the rest of these commands/instructions to connect EC2 with RDS.
+
+```
+phpenmod mcrypt
+
+vim /etc/apache2/sites-enabled/000-default.conf
+--ADD LINE AT THE TOP-- 
 Include /etc/phpmyadmin/apache.conf
 
 service apache2 restart
 
-nano /etc/phpmyadmin/config.inc.php
---ADD LINES BELOW THE PMA CONFIG AREA AND FILL IN DETAILS--
+vim /etc/phpmyadmin/config.inc.php
+--ADD LINES BELOW THE PMA CONFIG AREA (LINE 109) AND FILL IN DETAILS--
 $i++;
 $cfg['Servers'][$i]['host']          = '__FILL_IN_DETAILS__';
 $cfg['Servers'][$i]['port']          = '3306';
@@ -121,3 +146,8 @@ $cfg['Servers'][$i]['auth_type']     = 'config';
 $cfg['Servers'][$i]['user']          = '__FILL_IN_DETAILS__';
 $cfg['Servers'][$i]['password']      = '__FILL_IN_DETAILS__';
 ```
+
+The host will be the RDS endpoint, which is the link we set aside earlier (or you can get it from the instance information in the RDS console). The user and password information comes from when we configured the DB connection during the installation of phpMyAdmin. Once this information is saved, we will have the RDS DB accessible from phpMyAdmin via the dropdown, as demonstrated below.
+
+<<<insert image>>>
+
