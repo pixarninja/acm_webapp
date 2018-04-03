@@ -118,7 +118,7 @@ During setup, ensure the following.
 
 Now that phpMyAdmin is setup, you *should* be able to log into it using the IPv4 Public IP address found under the public DNS address we used before. If you copy that IP address into a browser followed by "/phpMyAdmin" you will be taken to the phpMyAdmin interface.
 
-If this link doesn't work, you should check your Security Groups under the EC2 console. Select the launch-wizard-1 security group (that's what mine was named, at least) with the proper description and click "Edit". You should add a rule, as shown below, that works for All TCP and allows connections from Anywhere.
+If this link doesn't work, you should check your Security Groups under the EC2 console. Select the rds-launch-wizard security group (that's what mine was named, at least) with the proper description and click "Edit". You should add a rule, as shown below, that works for All TCP and allows connections from Anywhere.
 
 <<<insert image>>>
   
