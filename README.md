@@ -164,20 +164,44 @@ The host will be the RDS endpoint, which is the link we set aside earlier (or yo
 
 ### Webserver: Creating an Elastic Beanstalk instance
 
-Now that all the plumbing is done, we should setup the cloud environment for launching our web application. We will use Elastic Beanstalk (again from AWS) in order to launch our application, since it will setup the Tomcat webserver backend for us automatically. To get started, open the Elastic Beanstalk Console via the following link: [https://console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1](https://console.aws.amazon.com/rds/home?region=us-east-1). This console is the basic interface for AWS Elastic Beanstalk managment. Again, notice that there is a place to change where on Earth the services are hosted from in the top right corner as a drop-down menu. I've selected North Virgina (corresponding to us-east-1) since it is an option built into Netbeans cloud services.
+Now that all the plumbing is done, we should setup the cloud environment for launching our web application. We will use Elastic Beanstalk (again from AWS) in order to launch our application, since it will setup the Tomcat webserver backend for us automatically. In order to manage the EB instance, we must first create a User for the instance to link to. This is done in a different AWS service, called IAM: [https://console.aws.amazon.com/iam/home?region=us-east-1](https://console.aws.amazon.com/rds/home?region=us-east-1). If you already have created a user and their credentials downloaded, then you may proceed to the EB instance setup. Otherwise, follow the steps below:
+
+- Under the "Users" tab, select the "Add user" button.
+- Name the user; I chose the name "nmtacm". Give the user at least Programmatic Access.
+- Create the permission group "admin" with policy "AdministrativeAccess", or use a group with that policy.
+- Review the information and create the user.
+
+Once the user is created, you will need to download and store the credentials somewhere accessible. *This is the last time you can access these credentials!*
+
+To setup EB, open the Elastic Beanstalk Console via the following link: [https://console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1](https://console.aws.amazon.com/rds/home?region=us-east-1). This console is the basic interface for AWS Elastic Beanstalk managment. Again, notice that there is a place to change where on Earth the services are hosted from in the top right corner as a drop-down menu. I've selected North Virgina (corresponding to us-east-1) since it is an option built into Netbeans cloud services.
 
 Select "Create New Application" from the upper right hand corner of the page, and then follow the steps below.
 
-- Give the application a name. I named mine "nmtacmdemo".
+- Give the application a name. I named mine "nmtacmwebdemo".
 - Click the "Create Webserver" button.
-- Under "Predefined configuration" select "Tomcat" from the dropdown menu.
+- Under "Predefined configuration" select "Tomcat" and "Single instance" from the dropdown menus.
 - Under "Deployment Preferences" section, use the dropdown menu to select "All at once" instead of "Rolling".
-- Under the environment information, configure a name that you would like to see in the URL. I used "nmtacmdemo". There are more steps you can take after setting up this application instance to obtain your own URL, however I will not ellaborate on those here.
+- Under the environment information, configure a name that you would like to see in the URL. I used "nmtacmwebdemo". There are more steps you can take after setting up this application instance to obtain your own URL, however I will not ellaborate on those here.
 - Select the checkbox for "Create this environment inside a VPC"; we will configure this later.
 - Fill in the key and email address, then proceed to the next step.
-- Proceed to the next page, since we don't need to add any key tags.
-- The VPC information should be pulled in for the default VPC. Select at least one ELB and EC2 subnets using the checkboxes. Also ensure that the correct subnet group is selected at the bottom of the page.
-- The default permissions should be correct, proceed to the next step.
+- Proceed to the next page, since we don't need to add any environment tags.
+- The VPC information should be pulled in for the default VPC. Select all of the available subnets. Also ensure that the correct subnet group is selected at the bottom of the page.
+- If none are available, you'll need to create a new service role. If there are already service roles present, proceed to the next step.
 - Review the information, then click "Launch" to launch the webserver.
 
-It will take several minutes for AWS to create the environment. After the environment has been created, ...
+It will take several minutes for AWS to create the environment. After the environment has been created, EB will be ready to launch an application. We will setup NetBeans to do this for us below.
+
+### Launching to EB from NetBeans
+
+In order to connect EB and NetBeans, we must setup our EB instance under the "Cloud" in NetBeans. You can add a cloud by going to the Services tab in NetBeans, and then right click on the Cloud and select "Add Cloud...".
+
+<<<insert image>>>
+
+Now follow the steps below to finish setting up the cloud:
+
+- Select "Amazon Beanstalk" as the cloud option, and give the cloud a name that will be used to identify it in NetBeans.
+- Select the region where the EB instance is hosted. As noted above, I chose North Virginia because it's an option in NetBeans.
+- Input the Access Key ID and Secret Access Key that we saved with the user we created.
+- Select "Finish" once the keys have been verified.
+
+You should now be able to launch a NetBeans application, by chaning the Server Settings of the NetBeans project to the newly created EB cloud addition. This ends the Walkthough of the backend setup of this repository.
