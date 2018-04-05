@@ -15,7 +15,7 @@ This repo contains source files for the web application demonstration given at t
 
 Below I've included some helpful code snippets that describe what needs to be added to the code base when working with JSP, servlets, and Java beans. I will use these snippets in my demonstration to help save time, and it should also help viewers to follow along.
 
-### Servlets
+### Java Servlets
 
 Java servlets are what handle requests for your webpage. Code can be automattically generated for them in NetBeans, by clicking the "Servlet..." option when creating a new file. In order to send or receive requests, a servlet needs to at least have the doGet and doPost servlet methods implemented; this is usually where we will add our servlet code. These methods are called mainly from JSP forms. 
 
