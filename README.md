@@ -351,3 +351,22 @@ If the form does not have a button submission, then we can create it without the
     </a>
 </p>
 ```
+
+### Web.xml
+
+For each Java servlet added to the project, we must add servlet and servlet-mapping tags for it in the web.xml file. This file is usually stored in the WEB-INF/ directory inside of NetBeans. I've copied a very basic web.xml file below.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <display-name>SiteName</display-name>
+    <servlet>
+        <servlet-name>MyServlet</servlet-name>
+        <servlet-class>MyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MyServlet</servlet-name>
+        <url-pattern>/MyServlet</url-pattern>
+    </servlet-mapping>
+</web-app>
+```
