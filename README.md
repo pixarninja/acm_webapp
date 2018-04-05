@@ -22,7 +22,7 @@ Since the demonstration time is only an hour, I won't be able to cover how to cr
 - Tutorial: [Creating EC2 and RDS instances for phpMyAdmin](https://www.youtube.com/watch?v=Bz-4wTGD2_Q)
 - Tutorial: [Linking Elastic Beanstalk to Netbeans](https://blog.idrsolutions.com/2015/10/how-to-set-up-amazon-cloudaws-elastic-beanstalk-on-the-netbeans-ide/)
 
-### Backend Walkthrough
+### Walkthrough
 
 #### phpMyAdmin: Setting Up EC2
 
@@ -197,3 +197,157 @@ Now follow the steps below to finish setting up the cloud:
 - Select "Finish" once the keys have been verified.
 
 You should now be able to launch a NetBeans application, by chaning the Server Settings of the NetBeans project to the newly created EB cloud addition. This ends the Walkthough of the backend setup of this repository.
+
+## Code Snippets
+
+Below I've included some helpful code snippets that describe what needs to be added to the code base when working with JSP, servlets, and Java beans. I will use these snippets in my demonstration to help save time, and it should also help viewers to follow along.
+
+### Servlets
+
+Java servlets are what handle requests for your webpage. Code can be automattically generated for them in NetBeans, by clicking the "Servlet..." option when creating a new file. In order to send or receive requests, a servlet needs to at least have the doGet and doPost servlet methods implemented; this is usually where we will add our servlet code. These methods are called mainly from JSP forms. 
+
+A basic doPost method is produced below. You should think about the differences between GET and POST methods before deciding which to implement code in.
+
+```java
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String action = request.getParameter("action"); // used to know how to treat the request
+    int myVariable = 0;
+    if(request.getParameter("my_variable") != null) {
+        myVariable = Integer.parseInt(request.getParameter("my_variable")); // example for retrieving a variable from JSP
+    }
+    String url = "/";
+    if(action.equals("my_action")) {
+        try {
+            String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
+            Class.forName(driver); // open the driver
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String user = "your-db-user";
+            String pass = "your-db-password";
+            Connection connection = DriverManager.getConnection(dbURL, user, pass);
+
+            url = "/print.jsp"; // set the JSP file to go to, given there were no errors
+        } catch (ClassNotFoundException ex) {
+            url = "/index.jsp";
+            request.setAttribute("error", ex);
+            Logger.getLogger(MyServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            url = "/index.jsp";
+            request.setAttribute("error", ex);
+            Logger.getLogger(MyServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    /* take us to the specified URL */
+    RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+    dispatcher.forward(request, response);
+}
+```
+
+### Java Beans
+
+Java beans (despite the odd name) are very useful, and an integral part of the MVC architecture. The main purpose of a Java bean is to store data from the database into a Java object, keeping all the sensitive backend data (such as passwords or data) out of reach from users of the application.
+
+```java
+package beans; // for organization purposes
+
+import java.io.Serializable;
+import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class MyBean implements Serializable{
+    
+    private static LinkedHashMap beansById = new LinkedHashMap(); // map of MyBean classes
+    private Connection connection;
+    
+    private String id; // private DB variables (columns in the DB)
+    
+    public MyBean() { // an empty constructor is needed if this class is a Java bean
+        try {
+            beansById = new LinkedHashMap();
+            String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
+            Class.forName(driver); // open the driver
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String username = "your-db-user";
+            String password = "your-db-password";
+            connection = DriverManager.getConnection(dbURL, username, password); // open the connection
+        
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery("SELECT * FROM `MyTable`"); // SELECT data from a table in the DB
+            while(rs.next()) { // must call rs.next() at least once, to grab the first row of data
+                String id = rs.getString("id"); // create local DB variables and initialize them from data in the DB
+                
+                beansById.put(id, new MyBean(/* store the data saved from the DB variables in a constructor*/));
+            }
+            rs.close();
+            connection.close();
+        } catch (ClassNotFoundException ex) { // catch Driver errors
+            Logger.getLogger(MyBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) { // catch SQL errors
+            Logger.getLogger(MyBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+```
+
+### JSP
+
+JSP (JavaServer Pages) is pretty much HTML augmented with Java. The main purpose of JSP is to help us procedurally generate web pages on the fly, by loading in data from our Java beans or directly from the database (which can be insecure!). Below is a code snippet that is placed at the top of a JSP page, which is used to initialize a Java bean.
+
+```jsp
+<%@page import="beans.*"%> // import all of our Java beans
+... // other imports
+<jsp:useBean id="myBean" class="beans.beanSource" scope="request"/> // import a Java bean, notice there are no '%'!
+```
+
+Before we start our main body of HTML code we might want to import another JSP page, such as a JSP header. This can be accomplished using the snippet below.
+
+```jsp
+<%@include file="jsp_file.jsp"%>
+```
+
+After importing a Java bean, we can use it later in the JSP code, just like in Java.
+
+```jsp
+<%
+    MyClass myClass = myBean.getBeanById(id); // grabs an element from the MyClass list inside of myBean
+%>
+```
+
+We can also retreive data sent from our Java servlets, using getParameter (set by JSP) or getAttribute (set in the servlet).
+
+```jsp
+<%
+    String item = null;
+    if(request.getParameter("item") != null) { // check if the item is a parameter
+        item = request.getParameter("item")); // returns a String
+    }
+    else if(request.getAttribute("item") != null) { // check if the item is an attribute
+        item = (String)request.getAttribute("item"); // returns an Object, we should cast to String
+    }
+%>
+```
+
+Similarly, we can send requests to our Java servlets by using forms. This is very important in the MVC architecture, since it creates fewer entry points for malicious attacks.
+
+```jsp
+<form id="myForm" action="MyServlet" method="POST">
+    <input type="hidden" name="action" value="my_action">
+    <input type="hidden" name="my_variable" value="<%=my_JSP_variable%>">
+    <button type="submit">Submit Form</button>
+</form>
+```
+
+If the form does not have a button submission, then we can create it without the button tag and submit (for example) by a link instead.
+
+```jsp
+<p align="center">
+    <a onclick="document.getElementById('myForm').submit();">
+        Submit Form
+    </a>
+</p>
+```
