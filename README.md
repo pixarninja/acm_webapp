@@ -20,6 +20,7 @@ Since the demonstration time is only an hour, I won't be able to cover how to cr
 - [EC2 Console (us-east-1)](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1)
 - [RDS Console (us-east-1)](https://console.aws.amazon.com/rds/home?region=us-east-1)
 - Tutorial: [Creating EC2 and RDS instances for phpMyAdmin](https://www.youtube.com/watch?v=Bz-4wTGD2_Q)
+- Tutorial: [Linking Elastic Beanstalk to Netbeans](https://blog.idrsolutions.com/2015/10/how-to-set-up-amazon-cloudaws-elastic-beanstalk-on-the-netbeans-ide/)
 
 ### Backend Walkthrough
 
