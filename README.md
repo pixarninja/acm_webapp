@@ -4,9 +4,9 @@
 
 This repo contains source files for the web application demonstration given at the ACM chapter of NMT. Topics I plan to cover during the demonstration are listed below:
 - MVC Architecture
-- JSP/HTML
 - Java Servlets
 - Java Beans
+- JSP/HTML
 - SQL Databases
 - PhpMyAdmin
 - Basic Password Encription
