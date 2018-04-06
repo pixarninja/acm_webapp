@@ -373,8 +373,8 @@ You should now be able to launch a NetBeans application, by chaning the Server S
 
 ### NetBeans Libraries
 
-NetBeans requires two extra libraries in order to use the JDBC driver and MySQL. The versions of the libraries I used are stored in this repository for easy access under the libraries/ directory. You can add them to your NetBeans project by right clicking on the "Libraries" folder and selecting "Add JAR/Folder...", as shown below.
+NetBeans requires an extra library in order to use the JDBC driver. The versions of the libraries I used (one for MySQL and one for MariaDB) are stored in this repository for easy access under the libraries/ directory. You can add them to your NetBeans project by right clicking on the "Libraries" folder and selecting "Add JAR/Folder...", as shown below.
 
 ![jar](references/jar.jpg)
 
-Then select the two JAR files from this repository to import them into your project.
+Then select the two JAR files from this repository to import them into your project. The one I used for this demo is called "mysql-connector-java-5.1.45-bin".
