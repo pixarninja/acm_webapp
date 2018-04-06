@@ -40,7 +40,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             String pass = "your-db-password";
             Connection connection = DriverManager.getConnection(dbURL, user, pass);
 
-            url = "/print.jsp"; // set the JSP file to go to, given there were no errors
+            url = "/next_page.jsp"; // the JSP page to go to, given there were no errors
         } catch (ClassNotFoundException ex) {
             url = "/index.jsp";
             request.setAttribute("error", ex);
@@ -55,6 +55,48 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     RequestDispatcher dispatcher = request.getRequestDispatcher(url);
     dispatcher.forward(request, response);
 }
+```
+
+Below are examples of database interactions. All use a means of accessing data that avoids SQL-injection; there are "simpler" ways to perform these actions, however they leave your application open to SQL injection! Usually any format that uses the PreparedStatement class is secure. Using the ResultSet class by itself is not as secure.
+
+#### Select
+
+```java
+String query = "SELECT * FROM `TableName` WHERE id = ?";
+PreparedStatement ps = connection.prepareStatement(query);
+ps.setObject(1, id); // can also use setInt, setString, etc.
+ResultSet rs = ps.executeQuery();
+```
+
+#### Insert
+```java
+String query = "INSERT INTO `MyTable` (`id`, `column`) VALUES (?, ?);";
+PreparedStatement ps = connection.prepareStatement(query);
+ps.setObject(1, id); // can also use setInt, setString, etc.
+ps.setObject(2, variable); // can also use setInt, setString, etc.
+ps.execute();
+ps.close();
+```
+
+#### Update
+
+```java
+String query = "UPDATE `MyTable` SET column = ? WHERE id = ?";
+PreparedStatement ps = connection.prepareStatement(query);
+ps.setObject(1, variable); // can also use setInt, setString, etc.
+ps.setObject(2, id); // can also use setInt, setString, etc.
+ps.executeUpdate();
+ps.close();
+```
+
+#### Delete
+
+```java
+String query = "DELETE FROM `MyTable` WHERE id = ?";
+PreparedStatement ps = connection.prepareStatement(query);
+ps.setObject(1, id); // can also use setInt, setString, etc.
+ps.executeUpdate();
+ps.close();
 ```
 
 ### Java Beans
@@ -77,7 +119,9 @@ public class MyBean implements Serializable{
     private static LinkedHashMap beansById = new LinkedHashMap(); // map of MyBean classes
     private Connection connection;
     
-    private String id; // private DB variables (columns in the DB)
+    /* DB variables (columns in the DB) */
+    private int id; // for simplicity, the primary key is called "id"
+    private String column;
     
     public MyBean() { // an empty constructor is needed if this class is a Java bean
         try {
@@ -91,11 +135,14 @@ public class MyBean implements Serializable{
         
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery("SELECT * FROM `MyTable`"); // SELECT data from a table in the DB
+            String query = "SELECT * FROM `MyTable`"; // SELECT all data from a table in the DB
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
             while(rs.next()) { // must call rs.next() at least once, to grab the first row of data
-                String id = rs.getString("id"); // create local DB variables and initialize them from data in the DB
+                String id = rs.getInt("id"); // create local DB variables and initialize them from data in the DB
+                String column = rs.getString("column");
                 
-                beansById.put(id, new MyBean(/* store the data saved from the DB variables in a constructor*/));
+                beansById.put(id, new MyBean(id, column)); // store the data saved from the DB variables in a constructor
             }
             rs.close();
             connection.close();
@@ -104,6 +151,19 @@ public class MyBean implements Serializable{
         } catch (SQLException ex) { // catch SQL errors
             Logger.getLogger(MyBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public MyBean(int id, String column) { // constructor for storing a MyBean object
+        this.id = id;
+        this.column = column;
+    }
+    
+    public static MyBean getBeanById(int id) {
+        return (MyBean)beansById.get(id);
+    }
+    
+    public String getColumn() {
+        return column;
     }
 ```
 
@@ -114,7 +174,7 @@ JSP (JavaServer Pages) is pretty much HTML augmented with Java. The main purpose
 ```jsp
 <%@page import="beans.*"%> // import all of our Java beans
 ... // other imports
-<jsp:useBean id="myBean" class="beans.beanSource" scope="request"/> // import a Java bean, notice there are no '%'!
+<jsp:useBean id="myBean" class="beans.MyBean" scope="request"/> // import a Java bean, notice there are no '%' characters!
 ```
 
 Before we start our main body of HTML code we might want to import another JSP page, such as a JSP header. This can be accomplished using the snippet below.
@@ -127,7 +187,7 @@ After importing a Java bean, we can use it later in the JSP code, just like in J
 
 ```jsp
 <%
-    MyClass myClass = myBean.getBeanById(id); // grabs an element from the MyClass list inside of myBean
+    MyBean myBean = myBean.getBeanById(id); // grabs an element from the myBean list inside of the beansById map
 %>
 ```
 
