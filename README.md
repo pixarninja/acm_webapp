@@ -35,7 +35,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         try {
             String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
             Class.forName(driver); // open the driver
-            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint:port/your-db-name";
             String user = "your-db-user";
             String pass = "your-db-password";
             Connection connection = DriverManager.getConnection(dbURL, user, pass);
@@ -84,7 +84,7 @@ public class MyBean implements Serializable{
             beansById = new LinkedHashMap();
             String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
             Class.forName(driver); // open the driver
-            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint:port/your-db-name:port/your-db-name";
             String username = "your-db-user";
             String password = "your-db-password";
             connection = DriverManager.getConnection(dbURL, username, password); // open the connection
