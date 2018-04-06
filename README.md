@@ -11,6 +11,16 @@ This repo contains source files for the web application demonstration given at t
 - PhpMyAdmin
 - Basic Password Encription
 
+## Example Website
+
+Below is a link to a website I've created using the exact process discussed in this repository. The website is using the Free Tier on AWS, however because it holds so much data (around 30,000 entries in the DB) it costs about $20 a month to keep it going, and there are sometimes interruptions while using the website since the RAM is so low.
+
+[MTG Card Collector](http://mtg.cardcollector.org/)
+
+The website frontend code is on GitHub (the backend code is hidden, since this includes passwords to the DB). The following link will take you to the GitHub repository of the project.
+
+[pixarninja/cardcollector](https://github.com/pixarninja/cardcollector)
+
 ## Code Snippets
 
 Below I've included some helpful code snippets that describe what needs to be added to the code base when working with JSP, servlets, and Java beans. I will use these snippets in my demonstration to help save time, and it should also help viewers to follow along.
