@@ -165,7 +165,7 @@ If the form does not have a button submission, then we can create it without the
 </p>
 ```
 
-### Web.xml
+### web.xml
 
 For each Java servlet added to the project, we must add servlet and servlet-mapping tags for it in the web.xml file. This file is usually stored in the WEB-INF/ directory inside of NetBeans. I've copied a very basic web.xml file below.
 
@@ -370,3 +370,11 @@ Now follow the steps below to finish setting up the cloud:
 - Select "Finish" once the keys have been verified.
 
 You should now be able to launch a NetBeans application, by chaning the Server Settings of the NetBeans project to the newly created EB cloud addition. This ends the Walkthough of the backend setup of this repository.
+
+### NetBeans Libraries
+
+NetBeans requires two extra libraries in order to use the JDBC driver and MySQL. The versions of the libraries I used are stored in this repository for easy access under the libraries/ directory. You can add them to your NetBeans project by right clicking on the "Libraries" folder and selecting "Add JAR/Folder...", as shown below.
+
+![jar](references/jar.jpg)
+
+Then select the two JAR files from this repository to import them into your project.
