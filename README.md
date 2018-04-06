@@ -169,7 +169,11 @@ public class MyBean implements Serializable{
 
 ### JSP
 
-JSP (JavaServer Pages) is pretty much HTML augmented with Java. The main purpose of JSP is to help us procedurally generate web pages on the fly, by loading in data from our Java beans or directly from the database (which can be insecure!). Below is a code snippet that is placed at the top of a JSP page, which is used to initialize a Java bean.
+JSP (JavaServer Pages) is pretty much HTML augmented with Java. The main purpose of JSP is to help us procedurally generate web pages on the fly, by loading in data from our Java beans or directly from the database (which can be insecure!).
+
+#### Using a Java Bean
+
+Below is a code snippet that is placed at the top of a JSP page, which is used to initialize a Java bean.
 
 ```jsp
 <%@page import="beans.*"%> // import all of our Java beans
@@ -177,11 +181,15 @@ JSP (JavaServer Pages) is pretty much HTML augmented with Java. The main purpose
 <jsp:useBean id="myBean" class="beans.MyBean" scope="request"/> // import a Java bean, notice there are no '%' characters!
 ```
 
+#### Importing Another JSP Page
+
 Before we start our main body of HTML code we might want to import another JSP page, such as a JSP header. This can be accomplished using the snippet below.
 
 ```jsp
 <%@include file="jsp_file.jsp"%>
 ```
+
+#### Using a Java Bean
 
 After importing a Java bean, we can use it later in the JSP code, just like in Java.
 
@@ -190,6 +198,8 @@ After importing a Java bean, we can use it later in the JSP code, just like in J
     MyBean myBean = myBean.getBeanById(id); // grabs an element from the myBean list inside of the beansById map
 %>
 ```
+
+#### Servlet Data
 
 We can also retreive data sent from our Java servlets, using getParameter (set by JSP) or getAttribute (set in the servlet).
 
