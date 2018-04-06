@@ -35,7 +35,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         try {
             String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
             Class.forName(driver); // open the driver
-            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint:port/your-db-name";
             String user = "your-db-user";
             String pass = "your-db-password";
             Connection connection = DriverManager.getConnection(dbURL, user, pass);
@@ -84,7 +84,7 @@ public class MyBean implements Serializable{
             beansById = new LinkedHashMap();
             String driver = "com.mysql.jdbc.Driver"; // the MySQL Driver you're using
             Class.forName(driver); // open the driver
-            String dbURL = "jdbc:mysql://your-db-instance-endpoint";
+            String dbURL = "jdbc:mysql://your-db-instance-endpoint:port/your-db-name:port/your-db-name";
             String username = "your-db-user";
             String password = "your-db-password";
             connection = DriverManager.getConnection(dbURL, username, password); // open the connection
@@ -373,8 +373,8 @@ You should now be able to launch a NetBeans application, by chaning the Server S
 
 ### NetBeans Libraries
 
-NetBeans requires two extra libraries in order to use the JDBC driver and MySQL. The versions of the libraries I used are stored in this repository for easy access under the libraries/ directory. You can add them to your NetBeans project by right clicking on the "Libraries" folder and selecting "Add JAR/Folder...", as shown below.
+NetBeans requires an extra library in order to use the JDBC driver. The versions of the libraries I used (one for MySQL and one for MariaDB) are stored in this repository for easy access under the libraries/ directory. You can add them to your NetBeans project by right clicking on the "Libraries" folder and selecting "Add JAR/Folder...", as shown below.
 
 ![jar](references/jar.jpg)
 
-Then select the two JAR files from this repository to import them into your project.
+Then select the two JAR files from this repository to import them into your project. The one I used for this demo is called "mysql-connector-java-5.1.45-bin".
