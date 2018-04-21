@@ -409,7 +409,9 @@ The host will be the RDS endpoint, which is the link we set aside earlier (or yo
 
 ### Webserver: Creating an Elastic Beanstalk instance
 
-Now that all the plumbing is done, we should setup the cloud environment for launching our web application. We will use Elastic Beanstalk (again from AWS) in order to launch our application, since it will setup the Tomcat webserver backend for us automatically. In order to manage the EB instance, we must first create a User for the instance to link to. This is done in a different AWS service, called IAM: [https://console.aws.amazon.com/iam/home?region=us-east-1](https://console.aws.amazon.com/rds/home?region=us-east-1). If you already have created a user and their credentials downloaded, then you may proceed to the EB instance setup. Otherwise, follow the steps below:
+Now that all the plumbing is done, we should setup the cloud environment for launching our web application. We will use Elastic Beanstalk (again from AWS) in order to launch our application, since it will setup the Tomcat webserver backend for us automatically. I've found that, even with the Free Tier selections for our instance types, the base cost for hosting a web application on Elastic Beanstalk is around $10.00 per month. This is because the instance is constantly running, no matter who is using it. Keep this in mind, you may or may not want to use EB.
+
+In order to manage the EB instance, we must first create a User for the instance to link to. This is done in a different AWS service, called IAM: [https://console.aws.amazon.com/iam/home?region=us-east-1](https://console.aws.amazon.com/rds/home?region=us-east-1). If you already have created a user and their credentials downloaded, then you may proceed to the EB instance setup. Otherwise, follow the steps below:
 
 - Under the "Users" tab, select the "Add user" button.
 - Name the user; I chose the name "nmtacm". Give the user at least Programmatic Access.
