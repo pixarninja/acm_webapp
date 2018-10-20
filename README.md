@@ -451,7 +451,7 @@ Now follow the steps below to finish setting up the cloud:
 - Input the Access Key ID and Secret Access Key that we saved with the user we created.
 - Select "Finish" once the keys have been verified.
 
-You should now be able to launch a NetBeans application, by chaning the Server Settings of the NetBeans project to the newly created EB cloud addition. This ends the Walkthough of the backend setup of this repository.
+You should now be able to launch a NetBeans application, by changing the Server Settings of the NetBeans project to the newly created EB cloud addition. This ends the Walkthough of the backend setup of this repository.
 
 ### NetBeans Libraries
 
